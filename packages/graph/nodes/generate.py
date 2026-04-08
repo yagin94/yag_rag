@@ -59,6 +59,9 @@ async def generate_node(state: dict) -> dict:
         answer = result.get("text", "").strip()
         if not answer:
             answer = "Mô hình không sinh ra câu trả lời hợp lệ."
+            
+        if "Không tìm thấy thông tin trong tài liệu" in answer:
+            answer = "Không tìm thấy thông tin trong tài liệu."    
 
         return {
             "answer": answer,
@@ -102,7 +105,7 @@ async def stream_generate_node(state: dict):
         logger.warning(f"[{request_id}] Empty context → skip streaming generation")
 
         yield {
-            "type": "error",
+            "type": "final",
             "data": {
                 "answer": "Không tìm thấy đủ thông tin trong dữ liệu truy xuất để trả lời câu hỏi này.",
                 "llm_meta": {
@@ -157,6 +160,9 @@ async def stream_generate_node(state: dict):
         answer = full_text.strip()
         if not answer:
             answer = "Mô hình không sinh ra câu trả lời hợp lệ."
+
+        if "Không tìm thấy thông tin trong tài liệu" in answer:
+            answer = "Không tìm thấy thông tin trong tài liệu."
 
         yield {
             "type": "final",

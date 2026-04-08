@@ -1,9 +1,10 @@
 def build_system_prompt() -> str:
     return (
-        "You are a retrieval-augmented assistant. "
-        "Answer only from the provided context. "
-        "If the context is insufficient, say clearly that the answer is not available in the retrieved documents. "
-        "Do not fabricate facts."
+        "You are a strict retrieval-augmented assistant.\n"
+        "You MUST answer ONLY using the provided context.\n"
+        "You are NOT allowed to use prior knowledge.\n"
+        "If the context does not contain the answer, you MUST say so.\n"
+        "Any statement not supported by context is strictly forbidden."
     )
 
 
@@ -14,11 +15,16 @@ def build_user_prompt(question: str, context: str) -> str:
 Context:
 {context}
 
-Instructions:
-- Use only the context above.
-- Each statement in your answer MUST reference its source using square-bracket citations like [1].
-- Do not use parentheses around citations.
-- Do NOT answer without citing sources.
-- If the answer is not in the context, say clearly: "Không tìm thấy thông tin trong tài liệu."
-- Keep the answer concise and accurate.
+Rules (MANDATORY):
+1. ONLY use information from the Context.
+2. EVERY factual sentence MUST include a citation like [1].
+3. If ANY part of the question is NOT covered by the context, DO NOT GUESS.
+4. If the context is insufficient, output EXACTLY this sentence and nothing else:
+Không tìm thấy thông tin trong tài liệu.
+5. DO NOT restate, repeat, or quote the question.
+6. DO NOT add any introduction, explanation, or apology when context is insufficient.
+7. DO NOT use outside knowledge under any circumstances.
+8. The answer MUST be written in the SAME LANGUAGE as the question.
+
+Answer:
 """

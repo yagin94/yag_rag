@@ -58,6 +58,6 @@ async def run_rag(initial_state: dict) -> dict:
 async def run_rag_pre_llm(initial_state: dict) -> dict:
     state = dict(initial_state)
     state = retrieve_node(state)
-    state = rerank_node(state)
+    state = await rerank_node(state)
     state = prepare_context_node(state)
     return state

@@ -10,6 +10,9 @@ logger = logging.getLogger("rag.retrieve")
 
 model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
 
+MIN_DENSE_SCORE = 0.35
+MIN_FINAL_SCORE = 0.35
+
 
 def embed_text(text: str) -> list[float]:
     return model.encode(text).tolist()
@@ -59,24 +62,33 @@ def retrieve(query: str, limit: int = 5, request_id: str = "no_request_id") -> l
         })
 
     docs.sort(key=lambda x: x.get("score", 0.0), reverse=True)
-    docs = docs[:limit]
+
+    filtered_docs = [
+        doc for doc in docs
+        if doc.get("dense_score", 0.0) >= MIN_DENSE_SCORE
+        and doc.get("score", 0.0) >= MIN_FINAL_SCORE
+    ]
+
+    docs = filtered_docs[:limit]
 
     latency_ms = int((perf_counter() - start) * 1000)
     if settings.log_queries:
         logger.info(
-            "retrieval_done request_id=%s latency_ms=%s retrieved=%s hybrid=%s normalized_query=%s",
+            "retrieval_done request_id=%s latency_ms=%s retrieved=%s raw_candidates=%s hybrid=%s normalized_query=%s",
             request_id,
             latency_ms,
             len(docs),
+            len(results.points),
             settings.hybrid_enabled,
             normalized_query,
         )
     else:
         logger.info(
-            "retrieval_done request_id=%s latency_ms=%s retrieved=%s hybrid=%s",
+            "retrieval_done request_id=%s latency_ms=%s retrieved=%s raw_candidates=%s hybrid=%s",
             request_id,
             latency_ms,
             len(docs),
+            len(results.points),
             settings.hybrid_enabled,
         )
 
