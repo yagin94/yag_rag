@@ -1,0 +1,37 @@
+[project]
+name = "yag-rag"
+version = "0.1.0"
+description = "RAG system with LangGraph + Qdrant"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi",
+    "uvicorn[standard]",
+    "pydantic",
+    "pydantic-settings",
+    "python-dotenv",
+    "qdrant-client",
+    "langgraph",
+    "langchain",
+    "sentence-transformers",
+    "httpx",
+    "ragas",
+    "datasets",
+    "langchain-openai",
+]
+
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = [
+    "apps",
+    "apps.api",
+    "apps.worker",
+    "packages",
+    "packages.core",
+    "packages.rag",
+    "packages.graph",
+    "packages.graph.nodes",
+    "packages.domain"
+]

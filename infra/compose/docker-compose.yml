@@ -1,0 +1,45 @@
+services:
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: yag-rag-qdrant
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - ../../data/qdrant:/qdrant/storage
+    restart: unless-stopped
+
+  api:
+    build:
+      context: ../..
+      dockerfile: infra/docker/api.Dockerfile
+    container_name: yag-rag-api
+    env_file:
+      - ../../.env
+    ports:
+      - "8000:8000"
+    volumes:
+      - ../../:/app
+    extra_hosts:
+      - "host.docker.internal:host-gateway"  
+    depends_on:
+      - qdrant
+    command: >
+      uvicorn apps.api.main:app
+      --host 0.0.0.0
+      --port 8000
+      --reload
+
+  worker:
+    profiles: ["manual"]
+    build:
+      context: ../..
+      dockerfile: infra/docker/worker.Dockerfile
+    container_name: yag-rag-worker
+    env_file:
+      - ../../.env
+    volumes:
+      - ../../:/app
+    depends_on:
+      - qdrant
+    command: python apps/worker/main.py

@@ -1,0 +1,1 @@
+docker compose -f infra/compose/docker-compose.yml run --rm worker python -m apps.worker.main
