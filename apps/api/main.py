@@ -6,8 +6,8 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.responses import StreamingResponse
-from pydantic import BaseModel
 
+from apps.api.schemas import AskRequest, AskResponse
 from packages.graph.rag_graph import run_rag, run_rag_pre_llm
 from packages.graph.nodes.generate import stream_generate_node
 from packages.graph.nodes.rerank import get_reranker
@@ -25,27 +25,6 @@ app = FastAPI(title="yag-rag", lifespan=lifespan)
 
 logger = logging.getLogger("rag")
 logging.basicConfig(level=getattr(logging, settings.log_level.upper(), logging.INFO))
-
-
-class AskRequest(BaseModel):
-    query: str
-
-
-class SourceItem(BaseModel):
-    id: int | str
-    title: str
-
-
-class AskResponse(BaseModel):
-    query: str
-    retrieved_docs: list[dict]
-    prepared_context: str
-    answer: str
-    llm_meta: dict
-    retrieval_meta: dict
-    meta: dict
-    sources: list[SourceItem]
-
 
 @app.get("/health")
 def health():
@@ -125,7 +104,7 @@ async def ask(req: AskRequest):
         "latency_ms": total_latency_ms,
     }
 
-    with open("evaluation.jsonl", "a", encoding="utf-8") as f:
+    with open(settings.eval_log_path, "a", encoding="utf-8") as f:
         f.write(json.dumps(eval_record, ensure_ascii=False) + "\n")
 
     return result
@@ -219,7 +198,7 @@ async def ask_stream(req: AskRequest):
                     "latency_ms": total_latency_ms,
                 }
 
-                with open("evaluation.jsonl", "a", encoding="utf-8") as f:
+                with open(settings.eval_log_path, "a", encoding="utf-8") as f:
                     f.write(json.dumps(eval_record, ensure_ascii=False) + "\n")
 
         except Exception as e:

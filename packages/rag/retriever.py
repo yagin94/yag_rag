@@ -8,14 +8,14 @@ from time import perf_counter
 
 logger = logging.getLogger("rag.retrieve")
 
-model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
+model = SentenceTransformer(settings.embedding_model)
 
 MIN_DENSE_SCORE = 0.35
 MIN_FINAL_SCORE = 0.35
 
 
 def embed_text(text: str) -> list[float]:
-    return model.encode(text).tolist()
+    return model.encode(text, normalize_embeddings=True).tolist()
 
 
 def retrieve(query: str, limit: int = 5, request_id: str = "no_request_id") -> list[dict]:

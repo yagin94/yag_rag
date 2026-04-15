@@ -17,7 +17,7 @@ Context:
 
 Rules (MANDATORY):
 1. ONLY use information from the Context.
-2. EVERY factual sentence MUST include a citation like [1].
+2. EVERY sentence MUST include at least one citation like [1]. Multiple citations are allowed if needed.
 3. If ANY part of the question is NOT covered by the context, DO NOT GUESS.
 4. If the context is insufficient, output EXACTLY this sentence and nothing else:
 Không tìm thấy thông tin trong tài liệu.

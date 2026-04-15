@@ -2,9 +2,16 @@ from qdrant_client import QdrantClient
 from qdrant_client.http.models import Distance, VectorParams
 from packages.core.config import settings
 
+_qdrant_client = None
+
 
 def get_client() -> QdrantClient:
-    return QdrantClient(url=settings.qdrant_url)
+    global _qdrant_client
+
+    if _qdrant_client is None:
+        _qdrant_client = QdrantClient(url=settings.qdrant_url)
+
+    return _qdrant_client
 
 
 def ensure_collection() -> None:

@@ -31,8 +31,9 @@ class Settings(BaseSettings):
     hybrid_dense_weight: float = 1.0
     hybrid_lexical_weight: float = 1.0
     
+    eval_log_path: str = "evaluation.jsonl"
+    embedding_model: str = "sentence-transformers/all-MiniLM-L6-v2"
     
-
     model_config = SettingsConfigDict(
         env_file=".env",
         extra="ignore"

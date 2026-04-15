@@ -4,10 +4,11 @@ from ragas import evaluate
 from ragas.metrics.collections import ContextUtilization
 from openai import AsyncOpenAI
 from ragas.llms import llm_factory
+from packages.core.config import settings
 
 client = AsyncOpenAI(
     api_key="ollama",
-    base_url="http://172.28.224.1:11434/v1",
+    base_url=f"{settings.llm_base_url}/v1",
 )
 
 llm = llm_factory(
@@ -16,7 +17,7 @@ llm = llm_factory(
     client=client,
 )
 
-def load_eval_dataset(path: str = "evaluation.jsonl") -> Dataset:
+def load_eval_dataset(path: str = settings.eval_log_path) -> Dataset:
     rows = []
 
     with open(path, "r", encoding="utf-8") as f:
@@ -34,7 +35,7 @@ if __name__ == "__main__":
 
     client = AsyncOpenAI(
         api_key="ollama",
-        base_url="http://172.28.224.1:11434/v1",
+        base_url=f"{settings.llm_base_url}/v1",
     )
 
     llm = llm_factory(

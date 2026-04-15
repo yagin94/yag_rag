@@ -1,6 +1,6 @@
-from typing import TypedDict, List
 from langgraph.graph import StateGraph, END
 
+from packages.graph.schemas import RAGState
 from packages.rag.retriever import retrieve
 from packages.graph.nodes.prepare_context import prepare_context_node
 from packages.graph.nodes.generate import generate_node
@@ -8,18 +8,8 @@ from packages.graph.nodes.rerank import rerank_node
 from packages.core.config import settings
 
 
-class RAGState(TypedDict, total=False):
-    query: str
-    retrieved_docs: List[dict]
-    prepared_context: str
-    answer: str
-    llm_meta: dict
-    retrieval_meta: dict
-    meta: dict
-
-
 def retrieve_node(state: RAGState) -> RAGState:
-    normalized_query = state["query"].strip().lower()
+    normalized_query = state.get("query", "").strip().lower()
     request_id = state.get("meta", {}).get("request_id", "no_request_id")
     docs = retrieve(state["query"], request_id=request_id)
 

@@ -44,7 +44,6 @@ async def generate_node(state: dict) -> dict:
             ),
             temperature=0.1,
             max_tokens=512,
-            stream=False,
         )
 
         latency_ms = int((time.perf_counter() - start) * 1000)

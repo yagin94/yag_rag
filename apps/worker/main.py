@@ -4,11 +4,11 @@ from packages.rag.qdrant_store import ensure_collection, get_client
 from packages.core.config import settings
 
 
-model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
+model = SentenceTransformer(settings.embedding_model)
 
 
 def embed_text(text: str) -> list[float]:
-    return model.encode(text).tolist()
+    return model.encode(text, normalize_embeddings=True).tolist()
 
 
 def main():

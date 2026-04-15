@@ -10,7 +10,7 @@ class OllamaClient(LLMClient):
     def __init__(self, base_url: str, model: str, timeout: int = 60):
         self.base_url = base_url.rstrip("/")
         self.model = model
-        self.timeout = timeout
+        self.timeout = httpx.Timeout(timeout, connect=5.0)
 
     async def generate(
         self,
@@ -18,7 +18,6 @@ class OllamaClient(LLMClient):
         user_prompt: str,
         temperature: float = 0.1,
         max_tokens: int = 512,
-        stream: bool = False,
         **kwargs,
     ) -> dict:
         payload = {
@@ -27,7 +26,7 @@ class OllamaClient(LLMClient):
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt},
             ],
-            "stream": stream,
+            "stream": False,
             "options": {
                 "temperature": temperature,
                 "num_predict": max_tokens,

@@ -10,7 +10,6 @@ class LLMClient(ABC):
         user_prompt: str,
         temperature: float = 0.1,
         max_tokens: int = 512,
-        stream: bool = False,
         **kwargs: Any,
     ) -> dict:
         """

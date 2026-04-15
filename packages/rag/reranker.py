@@ -15,8 +15,9 @@ class Reranker:
 
         pairs = []
         for doc in docs:
+            payload = doc.get("payload", {}) or {}
             text = (
-                doc.get("payload", {}).get("text")
+                payload.get("text")
                 or doc.get("text")
                 or ""
             )

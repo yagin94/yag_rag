@@ -39,7 +39,7 @@ def prepare_context_node(state: dict) -> dict:
         doc_id = payload.get("id", f"doc_{i}")
         title = payload.get("title", "unknown")
         text = payload.get("text", "").strip()
-        score = doc.get("score", 0.0)
+        score = doc.get("rerank_score", doc.get("score", 0.0))
 
         block = f"[{doc_id} | score={score:.3f} | source={title}]\n{text}\n"
 

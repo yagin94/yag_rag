@@ -24,6 +24,7 @@ async def rerank_node(state: dict[str, Any]) -> dict[str, Any]:
             "retrieval_meta": {
                 **state.get("retrieval_meta", {}),
                 "reranker_enabled": False,
+                "reranked": False,
             },
         }
 
